@@ -1,0 +1,38 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Veiculo {
+  placa        String    @id
+  tipo         Tipo
+  proprietario String
+  modelo       String
+  marca        String
+  cor          String?
+  ano          Int?
+  telefone     String
+  estadias     Estadia[]
+}
+
+enum Tipo {
+  CARRO
+  MOTO
+  VAN
+  CAMINHAO
+  ONIBUS
+}
+
+model Estadia {
+  id         Int       @id @default(autoincrement())
+  placa      String?
+  entrada    DateTime  @default(now())
+  saida      DateTime?
+  valorHora  Float
+  valorTotal Float?
+  automovel  Veiculo?  @relation(fields: [placa], references: [placa], onUpdate: Cascade, onDelete: SetNull)
+}
